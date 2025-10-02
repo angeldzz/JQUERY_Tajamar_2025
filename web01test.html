@@ -4,19 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .rojo{
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <!-- Comentarios en id de microsoft
     CONTROL + K + C -->
     <!-- Descomentar 
     CONTROL + K + U -->
+    <h1 class="rojo">Selectores Jquery</h1>
+    <h2>Esto es una prueba</h2>
+    <p>Parrafo 1</p>
+    <p>Parrafo 2</p>
+    <p>Parrafo 3</p>
+    <button id="boton1">Soy un boton</button>
+    <button id="boton2">Soy un boton 2</button>
+    <!-- ES RECOMENDABLE LOS SCRIPTS EN HTML PONERLOS AL FINAL  -->
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         // Aqui nuestro codigo jquery
         // LA PRIMERA SIEMPRE DEBE SER LA SIGUIENTE
         $(document).ready(function(){
             //Aqui dentro las peticiones
-            alert("Hola")
+            //alert("Hola mundo")
+            //Podemos asociar acciones a los objetos (CUANDO)
+            $("p").click(function(){
+                console.log("Mensaje por consola");
+                $("#boton1").hide();
+                //Existe una palabra clave que indica que
+                //accedemos al objeto que ha realizado la llamada: this
+                $(this).hide();
+            })
+            $(".rojo").click(function(){
+                console.log("Ocultamos etiqueta con clase rojo que se usa");
+                $(this).hide();
+            })
         })
     </script>
 </body>
