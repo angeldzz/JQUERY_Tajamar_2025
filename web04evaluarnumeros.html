@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Necesitamos mediante un boton evaluar los tres numeros:
+        debemos mostrar en un h1(por ejemplo) El mayor, el menor y el intermedio-->
+    <label for="num1">Numero 1</label>
+    <input type="text" id="num1">
+    <label for="num2">Numero 2</label>
+    <input type="text" id="num2">
+    <label for="num3">Numero 3</label>
+    <input type="text" id="num3">
+    <button id="comprobar">Comprobar</button>
+    <h1 id="resultado"></h1>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#comprobar").click(()=>{
+            let num1 = parseInt($("#num1").val())
+            let num2 = parseInt($("#num2").val())
+            let num3 = parseInt($("#num3").val())
+            let resultado = $("#resultado")
+            if(num1 > num2 && num1 > num3 && num2 >= num3){
+                resultado.text(`${num1} > ${num2} > ${num3}`);
+            }else if(num1 > num2 && num1 > num3 && num3 >= num2){
+                resultado.text(`${num1} > ${num3} > ${num2}`);
+            }else if(num2 > num1 && num2 > num3 && num1 >= num3){
+                resultado.text(`${num2} > ${num1} > ${num3}`);
+            }else if(num2 > num1 && num2 > num3 && num3 >= num1){
+                resultado.text(`${num2} > ${num3} > ${num1}`);
+            }else if(num3 > num1 && num3 > num2 && num1 >= num2){
+                resultado.text(`${num3} > ${num1} > ${num2}`);
+            }else if(num3 > num1 && num3 > num2 && num2 >= num1){
+                resultado.text(`${num3} > ${num2} > ${num1}`);
+            }else{
+                resultado.text('input incorrecto')
+            }
+            })
+        // Solución mejorada: Usar un array para ordenar los números y mostrar el resultado de manera más eficiente
+        });
+    </script>
+</body>
+</html>
