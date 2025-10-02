@@ -23,6 +23,7 @@
                 let actual = $(this).attr("src");
                 console.log("Imagen over: " + actual);
                 $(this).attr("src", "images/imagen2.jpg")
+                console.log($(this).attr("alt"));
             })
             $("img").mouseout(function(){
                 let actual = $(this).attr("src");
