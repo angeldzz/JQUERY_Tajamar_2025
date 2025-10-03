@@ -28,14 +28,22 @@
                     $("#contenedor").append(chk);
                     $("#contenedor").append(label);
                     chk.change(function  () {
-                        let resultado = parseInt($("#resultado").text());
-                        let valor = parseInt($(this).val());
-                        //Preguntamos por el valor del checkbox
-                        if($(this).is(":checked") == true){
+                        //version 1
+                        // let resultado = parseInt($("#resultado").text());
+                        // let valor = parseInt($(this).val());
+                        // //Preguntamos por el valor del checkbox
+                        // if($(this).is(":checked") == true){
+                        //     resultado += valor;
+                        // }else{
+                        //     resultado -= valor;
+                        // }
+                        //version 2
+                        let resultado = 0;
+                        // sumar unicamente los que esten chequeados
+                        $("input[type=checkbox]:checked").each(function  () {
+                            let valor = parseInt($(this).val());
                             resultado += valor;
-                        }else{
-                            resultado -= valor;
-                        }
+                        })
                         $("#resultado").text(resultado)
                     })
                 }
