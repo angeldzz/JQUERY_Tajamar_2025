@@ -10,22 +10,31 @@
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         $(document).ready(function  () {
+            // Inicializacion de variables
             let contenedor = $("#contenedor")
             let h1 = $("<h1>");
             let numero = 0;
 
+            // Creamos un bucle para crear los 10 botones
             for (let i = 0; i < 10; i++) {
+                // creamos los botones
                 let boton = $("<button>")
+                // añadimos el texto a los botones
                 boton.text(Math.floor(Math.random() * 11))
+                //añadimos cada boton al div
                 contenedor.append(boton);
+                // creamos una funcion para click de cada boton
                 boton.click(function  () {
+                    //el numero sera el actual + el valor del boton
                     numero += parseInt($(this).text());
+                    //vemos cual es el numero en consola
                     console.log(numero);
+                    // cambiamos el texto del h1
                     h1.text(`El numero actual es ${numero}`)
                     console.log(h1);
                 })
-                boton.text()
             }
+            // añadimos el h1 al contenedor
             contenedor.append(h1);
         })
     </script>
