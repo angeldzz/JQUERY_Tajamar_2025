@@ -19,8 +19,8 @@
             for (let i = 0; i < 10; i++) {
                 // creamos los botones
                 let boton = $("<button>")
-                // añadimos el texto a los botones
-                boton.text(Math.floor(Math.random() * 11))
+                // añadimos el texto a los botones que es un aleatorio entre 0 y 100
+                boton.text(Math.floor(Math.random() * 101))
                 //añadimos cada boton al div
                 contenedor.append(boton);
                 // creamos una funcion para click de cada boton
