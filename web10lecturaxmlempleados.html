@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Xml Empleados</h1>
+    <button id="botonleer">Leer XMP Empleados</button>
+    <ul id="listaempleados"></ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function  () {
+            $("#botonleer").click(function  () {
+                console.log("Antes del servicio");
+
+                $.get("documents/empleados.xml" ,function  (data) {
+                    console.log("Leyedo servicio");
+                    let html = ""
+
+                    //Buscamos la etiqueta APELLIDO
+                    $(data).find("APELLIDO").each(function  () {
+                        //El contenido ya esta accesible
+                        let apellido = $(this).text();
+                        html += `<li> ${apellido} </li>`
+                    })
+                    $("#listaempleados").html(html);
+                })
+                
+                console.log("despues del servicio");
+            })
+        })
+    </script>
+</body>
+</html>
