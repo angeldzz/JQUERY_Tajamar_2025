@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejemplo props Checkbox</h1>
+    <input type="range" id="rango" max="50" min="1" value="1">
+    <span id="valorrango"></span>
+    <h1 style="color: red;" id="resultado">0</h1>    
+    <div id="contenedor"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function  () {
+            $("#rango").change(function  () {
+                let numElementos = parseInt($("#rango").val());
+                $("#valorango").text(numElementos);
+                $("#contenedor").text("");
+                for (let i = 0; i < numElementos; i++) {
+                    let aleatorio = parseInt(Math.random() * 500) + 1;
+                    let chk = $("<input>", {
+                        "type": "checkbox",
+                        "value": aleatorio,
+                    })
+                    let label = $("<label>", {"text": aleatorio})
+                    $("#contenedor").append(chk);
+                    $("#contenedor").append(label);
+                    chk.change(function  () {
+                        let resultado = parseInt($("#resultado").text());
+                        let valor = parseInt($(this).val());
+                        //Preguntamos por el valor del checkbox
+                        if($(this).is(":checked") == true){
+                            resultado += valor;
+                        }else{
+                            resultado -= valor;
+                        }
+                        $("#resultado").text(resultado)
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>

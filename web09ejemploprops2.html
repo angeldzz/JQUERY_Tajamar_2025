@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejemplo props Checkbox</h1>
+    <p>si el checkbox esta marcado suma y sino resta</p>
+    <label for="checkbox">Sumar/restar</label>
+    <input type="checkbox" id="checkbox">
+    <div id="contenedor"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function  () {
+            // Inicializacion de variables
+            let contenedor = $("#contenedor")
+            let h1 = $("<h1>");
+            let numero = 0;
+
+            // Creamos un bucle para crear los 10 botones
+            for (let i = 0; i < 10; i++) {
+                // creamos los botones
+                let boton = $("<button>")
+                // añadimos el texto a los botones que es un aleatorio entre 0 y 100
+                boton.text(Math.floor(Math.random() * 101))
+                //añadimos cada boton al div
+                contenedor.append(boton);
+                // creamos una funcion para click de cada boton
+                boton.click(function  () {
+                    if($("#checkbox").prop("checked")){
+                        numero += parseInt($(this).text());
+                    }else{
+                        numero -= parseInt($(this).text());
+                    }
+                    //vemos cual es el numero en consola
+                    console.log(numero);
+                    // cambiamos el texto del h1
+                    h1.text(`El numero actual es ${numero}`)
+                    console.log(h1);
+                })
+            }
+            // añadimos el h1 al contenedor
+            contenedor.append(h1);
+        })
+    </script>
+</body>
+</html>
