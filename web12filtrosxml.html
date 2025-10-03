@@ -7,10 +7,53 @@
 </head>
 <body>
     <h1>Filtros XML</h1>
+    <label>Introduzca ID:</label>
+    <input type="text" id="cajaid"/>
+    <button id="botonatributo">Buscar atributo ID</button>
+    <hr/>
+    <label>Introduzca localidad</label>
+    <input type="text" id="cajaLocalidad"/>
+    <button id="botonlocalidad">Buscar localidad contains</button>
+    <hr/>
+    <h1 style="color: fuchsia;" id="mensaje"></h1>
+    <ul id="listadepartamentos"></ul>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         $(document).ready(function  () {
-            
+            $("#botonatributo").click(function  () {
+                $.get("documents/departamentos.xml",function  (data) {
+                    console.log("Leyendo...");
+                    // EL FILTRO SERA EL SIGUIENTE: DEPT[DEPT_NO=10]
+                    let id = $("#cajaid").val();
+                    let filtro = "DEPT[DEPT_NO=" + id + "]";
+                    // SOLAMENTE TENEMOS UN ID POR DEPARTAMENTO
+                    let nododept = $(data).find(filtro).first();
+                    let nombre = $(nododept).find("DNOMBRE").text();
+                    let localidad = $(nododept).find("LOC").text();
+                    $("#mensaje").text("Departamento " + nombre + ", Localidad " + localidad)
+                })
+            })
+            $("#botonlocalidad").click(function  () {
+                $.get("documents/departamentos.xml",function  (data) {
+                    console.log("Leyendo...");
+                    let cajaloc = $("#cajaLocalidad").val();
+                    //EL FILTRO SERA EL SIGUIENTE LOC:contains(localidad)
+                    let filtro = "LOC:contains(" + cajaloc + ")";
+                    // SON VARIOS ELEMENTOS LOS QUE PRODRIA DEVOLVER(each)
+                    let html = ""
+                    $(data).find(filtro).each(function  () {
+                        let resultado = $(this).parent();
+                        if(resultado == ""){
+                            html = "No coincide la busqueda"
+                            $("#mensaje").text(html)
+                        }else{
+                            console.log(resultado);
+                            let id = $(resultado)
+                            $("#mensaje").text(``)
+                        }
+                    })
+                })
+            })
         })
     </script>
 </body>
