@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Debemos leer un documento xml y mostrar los alumnos que tengan una nota igual o superior a la que hemos escrito -->
+     <label for="nota">Introduzca la nota</label>
+     <input type="number" name="nota" id="nota">
+     <button id="buscaralumnos" type="button">Buscar alumnos</button>
+     <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+     </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#buscaralumnos").click(function(){
+                $.get("documents/alumnos.xml",function(data){
+                let alumnos = $(data).find("alumno")
+                    if($(data).find("alumno").length === 0){
+                    alert("No se encuentran resultados")
+                    }else{
+                $("#tbody").html("")
+                alumnos.each(function(){
+                    let nota = parseInt($(this).find("nota").text());
+                    if(nota >= parseInt($("#nota").val())){
+                        $("#tbody").append(`
+                        <tr>
+                            <td>${$(this).find("nombre").text()}</td>
+                            <td>${$(this).find("apellidos").text()}</td>
+                            <td>${$(this).find("nota").text()}</td>
+                        </tr>
+                        `)
+                    }
+                })
+                }
+            })
+            })
+        })
+    </script>
+</body>
+</html>
