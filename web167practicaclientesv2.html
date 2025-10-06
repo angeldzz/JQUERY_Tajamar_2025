@@ -15,18 +15,25 @@
         $(document).ready(function () {
             let url = "https://apiclientesxml.azurewebsites.net/";
             let request = "api/Clientes";
+            // Hacemos una peticion pare recoger los datos de la api XML
             $.get(url + request, function (data) {
+                // Sacamos los clientes y por cada uno creamos un boton con valor texto y clase
                 $(data).find("Cliente").each(function () {
                     let boton = $("<button>", {
                         "value": $(this).find("IdCliente").text(),
                         "text": $(this).find("Nombre").text(),
                         "class": "buscarcliente"
                     })
+                    // añadimos los botones al contantainer
                     $("#container").append(boton)
                 })
+                // hacemos que cuando el usuario clicke un boton se ejecute la funcion
                 $(".buscarcliente").click(function () {
+                    // Buscamos el id que tiene asignado este boton y cambiamos la peticion https
                     request = `api/Clientes/${$(this).val()}`;
                     $.get(url + request, function (data) {
+                        // una vez se ejecute la peticion a la api añadimos al contenedor los datos
+                        //especificos que estamos buscando de las etiquetas xml el text()
                         $("#containercliente").html(`
                         <h1>${$(data).find("Nombre").text()}</h1>
                         <h3>${$(data).find("Email").text()}</h3>
