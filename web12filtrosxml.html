@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Filtros XML</h1>
     <label>Introduzca ID:</label>
-    <input type="text" id="cajaid"/>
+    <input type="text" id="cajaid" />
     <button id="botonatributo">Buscar atributo ID</button>
-    <hr/>
+    <hr />
     <label>Introduzca localidad</label>
-    <input type="text" id="cajaLocalidad"/>
+    <input type="text" id="cajaLocalidad" />
     <button id="botonlocalidad">Buscar localidad</button>
-    <hr/>
+    <hr />
     <div id="contenedor">
         <h3 style="color: fuchsia;" id="mensaje"></h3>
         <ul id="listadepartamentos"></ul>
     </div>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
-        $(document).ready(function  () {
-            
-            $("#botonatributo").click(function  () {
-                $.get("documents/departamentos.xml",function  (data) {
+        $(document).ready(function () {
+
+            $("#botonatributo").click(function () {
+                $.get("documents/departamentos.xml", function (data) {
                     console.log("Leyendo...");
                     // EL FILTRO SERA EL SIGUIENTE: DEPT[DEPT_NO=10]
                     $("#contenedor").html(`<h1 style="color: fuchsia;" id="mensaje"></h1>
-                                            <ul id="listadepartamentos"></ul>`);  
+                                            <ul id="listadepartamentos"></ul>`);
                     let id = $("#cajaid").val();
                     let filtro = "DEPT[DEPT_NO=" + id + "]";
                     // SOLAMENTE TENEMOS UN ID POR DEPARTAMENTO
@@ -37,9 +39,9 @@
                     let localidad = $(nododept).find("LOC").text();
                     if (nombre == "") {
                         $("#mensaje").text("No coincide la busqueda")
-                        $("#mensaje").css("color","red")
-                    }else{
-                        $("#mensaje").css("color","fuchsia")
+                        $("#mensaje").css("color", "red")
+                    } else {
+                        $("#mensaje").css("color", "fuchsia")
                         $("#mensaje").text("Departamento " + nombre + ", Localidad " + localidad)
                     }
                 })
@@ -50,24 +52,26 @@
                     $("#contenedor").html(`
                         <h1 style="color: fuchsia;" id="mensaje"></h1>
                         <ul id="listadepartamentos"></ul>
-                    `);  
+                    `);
                     let cajaloc = $("#cajaLocalidad").val();
                     let filtro = "LOC:contains(" + cajaloc + ")";
                     let resultados = $(data).find(filtro);
                     if (resultados.length === 0) {
                         $("#mensaje").css("color", "red").text("No coincide la búsqueda");
                         return; // Salimos si no hay resultados
+                    } else {
+                        resultados.each(function () {
+                            let deptid = $(this).parent().attr("DEPT_NO");
+                            let deptnombre = $(this).parent().find("DNOMBRE").text();
+                            $("#listadepartamentos").append(
+                                `<li>DEPT_ID = ${deptid}, DEPT_Nombre = ${deptnombre}, DEPT_Localidad = ${cajaloc}</li>`
+                            );
+                        });
                     }
-                    resultados.each(function () {
-                        let deptid = $(this).parent().attr("DEPT_NO");
-                        let deptnombre = $(this).parent().find("DNOMBRE").text();
-                        $("#listadepartamentos").append(
-                            `<li>DEPT_ID = ${deptid}, DEPT_Nombre = ${deptnombre}, DEPT_Localidad = ${cajaloc}</li>`
-                        );
-                    });
                 });
             });
         })
     </script>
 </body>
+
 </html>
