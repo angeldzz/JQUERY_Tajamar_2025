@@ -25,7 +25,8 @@
                 }
             })
             $("#selectjugador").change(function  () {
-                let name = $("#selectjugador").val();
+                // let name = $("#selectjugador").val();
+                let name = $("#selectjugador").prop("selectedIndex");
                 $.ajax({
                     url:"documents/jugadores.json",
                     dataType:"json",
