@@ -7,7 +7,19 @@
 </head>
 <body>
     <h1>Crud departamentos XML</h1>
-    <table>
+    <label for="cajaid">Id departamentos</label>
+    <input type="text" name="cajaid" id="cajaid">
+    <br>
+    <label for="nombre">Nombre</label>
+    <input type="text" name="nombre" id="nombre">
+    <br>
+    <label for="localidad">Localidad</label>
+    <input type="text" name="localidad" id="localidad">
+    <br>
+    <button type="button" id="botoninsert">Insertar</button>
+    <button type="button" id="botonupdate">Modificar</button>
+    <button type="button" id="botondelete">Eliminar</button>
+    <table id="tabladepartamentos">
         <thead>
             <tr>
                 <th>ID</th>
@@ -15,14 +27,77 @@
                 <th>Localidad</th>
             </tr>
         </thead>
-        <tbody id="tbody"></tbody>
+        <tbody></tbody>
     </table>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         let url = "https://apicruddepartamentosxml.azurewebsites.net/";
 
         $(document).ready(function  () {
+            
             loadDepartamentos();
+            // INSERCCION CON AJAX
+            $("#botoninsert").click(function  () {
+                let id = $("#cajaid").val();
+                let nombre = $("#nombre").val();
+                let localidad = $("#localidad").val();
+                //Necesitamos generar un string con la misma estructura 
+                // que el documento xml para sus registros
+                let dataXML = `
+                <Departamento>
+                    <IdDepartamento>${id}</IdDepartamento>
+                    <Nombre>${nombre}</Nombre>
+                    <Localidad>${localidad}</Localidad>
+                </Departamento>
+                `
+                let request = "api/departamentos";
+                $.ajax({
+                    url: url + request,
+                    type: "POST",
+                    contentType:"text/xml",
+                    data: dataXML,
+                    success: function(){
+                        console.log("insertado");
+                        loadDepartamentos();
+                    }
+                })
+            })
+
+            // MODIFICACION CON AJAX
+            $("#botonupdate").click(function  () {
+                let id = $("#cajaid").val();
+                let nombre = $("#nombre").val();
+                let localidad = $("#localidad").val();
+                let dataXML = getDepartamentosXML(id,nombre,localidad);
+
+                let request = "api/Departamentos"
+
+                $.ajax({
+                    url:url+request,
+                    type:"PUT",
+                    contentType:"text/xml",
+                    data:dataXML,
+                    success:function  () {
+                        console.log("modificando");
+                        loadDepartamentos()
+                    }
+                })
+            })
+            
+            //ELIMINAR CON AJAX
+            $("#botondelete").click(function  () {
+                let id = $("#cajaid").val();
+                let request = "api/departamentos/" + id;
+                $.ajax({
+                    url:url + request,
+                    type:"DELETE",
+                    success:function(){
+                        console.log("Eliminado");
+                        loadDepartamentos();
+                    }
+                })
+            })
+
         })
         function loadDepartamentos () {
             let request = "api/Departamentos"
@@ -41,9 +116,19 @@
                     </tr>
                     `
                 })
-                $("#tbody").html(html);
+                $("#tabladepartamentos tbody").html(html);
             })
         }
+        function getDepartamentosXML (id, nombre, localidad) {
+                let dataXML = `
+                <Departamento>
+                    <IdDepartamento>${id}</IdDepartamento>
+                    <Nombre>${nombre}</Nombre>
+                    <Localidad>${localidad}</Localidad>
+                </Departamento>
+                `
+                return dataXML;
+            }
     </script>
 </body>
 </html>
