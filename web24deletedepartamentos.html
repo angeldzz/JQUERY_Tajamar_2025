@@ -21,17 +21,7 @@
     <input type="text" id="cajalocalidad"><br>
     <button id="btncreate">Create</button>
     <button id="btnupdate">Update</button>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Id departamentos</th>
-                <th>Nombre</th>
-                <th>Localidad</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-    </table>
+    <ul id="lista"></ul>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         
@@ -102,15 +92,15 @@
                 let html = "";
                 $.each(data,function  (index,departamentos) {
                     html += `
-                    <tr>
-                        <td>${departamentos.numero}</td>
-                        <td>${departamentos.nombre}</td>
-                        <td>${departamentos.localidad}</td>
-                        <td><button class="borrar" value="${departamentos.numero}">Eliminar</button>
-                    </tr>
+                    <li>
+                        ${departamentos.numero}
+                        ${departamentos.nombre}
+                        ${departamentos.localidad}
+                        <button class="borrar" value="${departamentos.numero}">Eliminar</button>
+                        </li>
                     `
                 })
-                $("#tbody").html(html)
+                $("#lista").html(html)
             })
         }
     </script>
