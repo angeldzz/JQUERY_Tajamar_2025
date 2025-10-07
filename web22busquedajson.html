@@ -20,7 +20,7 @@
                 dataType:"json",
                 success:function(data){
                     $.each(data.jugadores,function  (index,jugador) {
-                        $("#selectjugador").append(`<option value="${jugador.nombre}">${jugador.nombre}</option>`)
+                        $("#selectjugador").append(`<option value="${index}">${jugador.nombre}</option>`)
                     })
                 }
             })
@@ -30,19 +30,28 @@
                     url:"documents/jugadores.json",
                     dataType:"json",
                     success:function(data){
-                        let html;
-                        $.each(data.jugadores,function  (index,player) {
-                            let playername = player.nombre;
-                            if(playername == name){
-                                let posicion = player.posicion;
-                                let imagen = player.imagen;
-                                html = `<h1>${playername}</h1>
-                                        <p>Posicion: ${posicion}</p>
-                                        <img src="${imagen}"/>`
+                        // let html;
+                        // $.each(data.jugadores,function  (index,player) {
+                        //     let playername = player.nombre;
+                        //     if(playername == name){
+                        //         let posicion = player.posicion;
+                        //         let imagen = player.imagen;
+                        //         html = `<h1>${playername}</h1>
+                        //                 <p>Posicion: ${posicion}</p>
+                        //                 <img src="${imagen}"/>`
                             
-                            }
-                            $("#containerjugador").html(html)
-                        })
+                        //     }
+                        //     $("#containerjugador").html(html)
+                        // })
+                        let html;
+                        
+                        let player = data.jugadores[$("#selectjugador").val()];
+                        
+                        html = `<h1>${player.nombre}</h1>
+                                        <p>Posicion: ${player.posicion}</p>
+                                        <img src="${player.imagen}"/>`
+                        
+                        $("#containerjugador").html(html)
                     }
                 })
             })
