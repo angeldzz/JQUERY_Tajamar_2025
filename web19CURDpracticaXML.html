@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>CRUD doctores</h1>
+    <label for="iddoctor">Id Doctor</label>
+    <input type="text" name="iddoctor" id="iddoctor"><br>
+    <label for="apellido">Apellido</label>
+    <input type="text" name="apellido" id="apellido"><br>
+    <label for="especialidad">Especialidad</label>
+    <input type="text" name="especialidad" id="especialidad"><br>
+    <label for="idhospital">Id Hospital</label>
+    <input type="text" name="idhospital" id="idhospital"><br>
+    <label for="salario">Salario</label>
+    <input type="text" name="salario" id="salario"><br>
+    <button type="button" id="btncreate">Create</button>
+    <button type="button" id="btnupdate">Update</button>
+    <button type="button" id="btndelete">Delete</button>
+    <table>
+        <thead>
+            <tr>
+                <th>IdDoctor</th>
+                <th>Apellido</th>
+                <th>Especidalidad</th>
+                <th>IdHospital</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url = "https://apicruddoctoresxml.azurewebsites.net/";
+        let request = "api/Doctores"
+        let dataXML = "";
+        $(document).ready(function  () {
+
+            $("#btncreate").click(function  () {
+                    apellido = $("#apellido").val();
+                    especialidad = $("#especialidad").val();
+                    idDoctor = $("#iddoctor").val();
+                    idHospital = $("#idhospital").val();
+                    salario = $("#salario").val();
+                dataXML = crearData(apellido, especialidad, idDoctor, idHospital, salario)
+                $.ajax({
+                    url:url+request,
+                    type:"POST",
+                    contentType:"text/xml",
+                    data:dataXML,
+                    success:function(){
+                        console.log("Doctor creado");
+                        cargarDatos();
+                    }
+                })
+            })
+            $("#btnupdate").click(function  () {
+                    apellido = $("#apellido").val();
+                    especialidad = $("#especialidad").val();
+                    idDoctor = $("#iddoctor").val();
+                    idHospital = $("#idhospital").val();
+                    salario = $("#salario").val();
+                dataXML = crearData(apellido, especialidad, idDoctor, idHospital, salario)
+                $.ajax({
+                    url:url+request,
+                    type:"PUT",
+                    contentType:"text/xml",
+                    data:dataXML,
+                    success:function(){
+                        console.log("Doctor modificado");
+                        cargarDatos();
+                    }
+                })
+            })
+            $("#btndelete").click(function  () {
+                    idDoctor = $("#iddoctor").val();
+                    console.log(idDoctor);
+                $.ajax({
+                    url:url+request+"/"+idDoctor,
+                    type:"DELETE",
+                    success:function(){
+                        console.log("Doctor borrado");
+                        cargarDatos();
+                    }
+                })
+            })
+            cargarDatos();
+        })
+        function cargarDatos () {
+            
+            
+            $.get(url+request,function  (data) {
+                let tr = "";
+                $(data).find("Doctor").each(function  () {
+                    apellido = $(this).find("Apellido").text();
+                    especialidad = $(this).find("Especialidad").text();
+                    idDoctor = $(this).find("IdDoctor").text();
+                    idHospital = $(this).find("IdHospital").text();
+                    salario = $(this).find("Salario").text();
+                    tr += `
+                                <tr>
+                                    <td>${idDoctor}</td>
+                                    <td>${apellido}</td>
+                                    <td>${especialidad}</td>
+                                    <td>${idHospital}</td>
+                                    <td>${salario}</td>
+                                </tr>
+                                `
+                $("tbody").html(tr)
+                })
+            })
+        }
+        function crearData (apellido, especialidad, idDoctor, idHospital, salario) {
+            dataXML = `
+                                <Doctor>
+                                    <Apellido>${apellido}</Apellido>
+                                    <Especialidad>${especialidad}</Especialidad>
+                                    <IdDoctor>${idDoctor}</IdDoctor>
+                                    <IdHospital>${idHospital}</IdHospital>
+                                    <Salario>${salario}</Salario>
+                                </Doctor>
+                                `
+            return dataXML;
+        }
+    </script>
+</body>
+</html>
