@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Crud departamentos JSON</h1>
+    <label>Id departamentos</label>
+    <input type="text" id="cajaid"><br>
+    <label>Nombre</label>
+    <input type="text" id="cajanombre"><br>
+    <label>Localidad</label>
+    <input type="text" id="cajalocalidad"><br>
+    <button id="btncreate">Create</button>
+    <button id="btnupdate">Update</button>
+    <button id="btndelete">Delete</button>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id departamentos</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url = "https://apicruddepartamentoscore.azurewebsites.net/";
+
+        $(document).ready(function  () {
+            $("#btncreate").click(function  () {
+                let request = "api/departamentos"
+                //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
+                // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
+                let departamento = new Object()
+                departamento.numero = parseInt($("#cajaid").val());
+                departamento.nombre = $("#cajanombre").val();
+                departamento.localidad = $("#cajalocalidad").val();
+                let dataJSON = JSON.stringify(departamento);
+                $.ajax({
+                    url:url+request,
+                    type:"POST",
+                    contentType:"application/json",
+                    data:dataJSON,
+                    success:function(){
+                        console.log("funciona");
+                        loadDepartamentos();
+                    }
+                })
+            })
+            $("#btnupdate").click(function  () {
+                let request = "api/departamentos"
+                //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
+                // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
+                let departamento = new Object()
+                departamento.numero = parseInt($("#cajaid").val());
+                departamento.nombre = $("#cajanombre").val();
+                departamento.localidad = $("#cajalocalidad").val();
+                let dataJSON = JSON.stringify(departamento);
+                $.ajax({
+                    url:url+request,
+                    type:"PUT",
+                    contentType:"application/json",
+                    data:dataJSON,
+                    success:function(){
+                        console.log("Editado");
+                        loadDepartamentos();
+                    }
+                })
+            })
+            $("#btndelete").click(function  () {
+                let request = "api/departamentos"
+                //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
+                // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
+                id = parseInt($("#cajaid").val());
+                $.ajax({
+                    url:url+request+"/"+id,
+                    type:"DELETE",
+                    success:function(){
+                        console.log("Borrado");
+                        loadDepartamentos();
+                    }
+                })
+            })
+            loadDepartamentos()
+        })
+
+        function loadDepartamentos () {
+            let request = "api/departamentos"
+            $.getJSON(url+request,function(data){
+                let html = "";
+                $.each(data,function  (index,departamentos) {
+                    html += `
+                    <tr>
+                        <td>${departamentos.numero}</td>
+                        <td>${departamentos.nombre}</td>
+                        <td>${departamentos.localidad}</td>
+                    </tr>
+                    `
+                })
+                $("#tbody").html(html)
+            })
+        }
+    </script>
+</body>
+</html>
