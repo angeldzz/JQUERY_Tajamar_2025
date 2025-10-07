@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .borrar {
+            color: black;
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
     <h1>Crud departamentos JSON</h1>
@@ -15,24 +21,24 @@
     <input type="text" id="cajalocalidad"><br>
     <button id="btncreate">Create</button>
     <button id="btnupdate">Update</button>
-    <button id="btndelete">Delete</button>
     <table border="1">
         <thead>
             <tr>
                 <th>Id departamentos</th>
                 <th>Nombre</th>
                 <th>Localidad</th>
+                <th>Eliminar</th>
             </tr>
         </thead>
         <tbody id="tbody"></tbody>
     </table>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
-        let url = "https://apicruddepartamentos.azurewebsites.net/";
-
+        
+        let url = "https://apicruddepartamentospgs.azurewebsites.net/";
         $(document).ready(function  () {
             $("#btncreate").click(function  () {
-                let request = "api/departamentos"
+                let request = "webresources/departamentos/post"
                 //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
                 // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
                 let departamento = new Object()
@@ -52,7 +58,7 @@
                 })
             })
             $("#btnupdate").click(function  () {
-                let request = "api/departamentos"
+                let request = "webresources/departamentos/put"
                 //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
                 // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
                 let departamento = new Object()
@@ -71,13 +77,15 @@
                     }
                 })
             })
-            $("#btndelete").click(function  () {
-                let request = "api/departamentos"
+            // No podemos poner un onclick con jquery a una clase general
+            $(document).on("click", ".borrar", function  () {
+                let id = parseInt($(this).val())
+                console.log(id);
+                let request = "webresources/departamentos/delete/" + id
                 //NECESITAMOS CREAR UN NUEVO OBJETO JAVASCRIPT CON
                 // LAS MISMAS PROPIEDADES DINAMICAS DEL JSON
-                id = parseInt($("#cajaid").val());
                 $.ajax({
-                    url:url+request+"/"+id,
+                    url:url+request,
                     type:"DELETE",
                     success:function(){
                         console.log("Borrado");
@@ -87,9 +95,9 @@
             })
             loadDepartamentos()
         })
-
+        
         function loadDepartamentos () {
-            let request = "api/departamentos"
+            let request = "webresources/departamentos"
             $.getJSON(url+request,function(data){
                 let html = "";
                 $.each(data,function  (index,departamentos) {
@@ -98,6 +106,7 @@
                         <td>${departamentos.numero}</td>
                         <td>${departamentos.nombre}</td>
                         <td>${departamentos.localidad}</td>
+                        <td><button class="borrar" value="${departamentos.numero}">Eliminar</button>
                     </tr>
                     `
                 })
