@@ -169,19 +169,19 @@
     </nav>
     <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Home</h1>
-            <table id="tablahospitales" class="table table-bordered text-center">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Direccion</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <h1>Create</h1>
+            <h2 id="mensaje"></h2>
+            <label>Id hospital</label>
+            <input type="text" id="cajaid" class="form-control"><br>
+            <label>Nombre</label>
+            <input type="text" id="cajanombre" class="form-control"><br>
+            <label>Direccion</label>
+            <input type="text" id="cajadireccion" class="form-control"><br>
+            <label>Telefono</label>
+            <input type="text" id="cajaTelefono" class="form-control"><br>
+            <label>Numero de camas</label>
+            <input type="text" id="cajacamas" class="form-control"><br>
+            <button id="btninsertar" class="btn btn-bd-primary">Insertar hospital</button>
         </div>
     </main>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -189,25 +189,31 @@
     <script>
         let url = "https://apicrudhospital.azurewebsites.net/"
         $(document).ready(function  () {
-            let request = "webresources/hospitales"
-            $.ajax({
-                url:url+request,
-                type:"GET",
-                success: function  (data) {
-                    console.log(data);
-                    $.each(data,function  (index, hospital) {
-                        let html = `
-                        <tr>
-                        <td>${hospital.nombre}</td>
-                        <td>${hospital.direccion}</td>
-                        <td><a class="btn btn-primary" href='web28detailhospital.html?idhospital=${hospital.idhospital}'>Details</a></td>
-                        <td><a class="btn btn-warning" href='web28edithospital.html?idhospital=${hospital.idhospital}'>Edit</a></td>
-                        <td><a class="btn btn-danger" href='web28deletehospital.html?idhospital=${hospital.idhospital}'>Delete</a></td>
-                        </tr>
-                        `;
-                        $("#tablahospitales tbody").append(html);
-                    })
-                }
+            $("#btninsertar").click(function  () {
+                let requestPOST = "webresources/hospitales/post";
+                let idhospital = parseInt($("#cajaid").val())
+                let nombre = $("#cajanombre").val()
+                let direccion = $("#cajadireccion").val()
+                let telefono = $("#cajaTelefono").val()
+                let camas = parseInt($("#cajacamas").val())
+                // CREAMOS UN NUEVO OBJETO HOSPITAL 
+                let hospital = new Object()
+                hospital.idhospital = idhospital
+                hospital.nombre = nombre
+                hospital.direccion = direccion
+                hospital.telefono = telefono
+                hospital.camas = camas
+                let hospitalJSON = JSON.stringify(hospital);
+                console.log(hospitalJSON);
+                $.ajax({
+                    url:url+requestPOST,
+                    type:"POST",
+                    contentType:"application/json",
+                    data:hospitalJSON,
+                    success: function  () {
+                        $("#mensaje").text("Objeto Creado")
+                    }
+                })
             })
         })
     </script>
