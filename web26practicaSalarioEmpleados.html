@@ -42,9 +42,8 @@
                     url:url+request,
                     type:"PUT",
                     success:function  () {
-                        console.log("se a cambiado el salario");
+                        console.warn("se a cambiado el salario");
                         CargarEmpleados();
-                        
                     }
                 })
             })
@@ -75,6 +74,9 @@
                                 <td>${empleado.salario}</td>
                                 </tr>`)
                         })
+                    },
+                    error: function  ( error ) {
+                        console.error("Error:" + error);
                     }
                 })
         }
