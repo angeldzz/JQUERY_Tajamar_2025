@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Empleados Oficio</h1>
+    <select id="cargos">
+
+    </select>
+    <label>Incremento salarial:</label>
+    <input type="text" id="inputaumento">
+    <button type="button" id="btnincrementar">Incrementar salario</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url = "https://apiempleadosaction.azurewebsites.net/"
+        $(document).ready(function  () {
+            // cargamos los empleos con su funcion
+            CargarEmpleos();
+            // Cuando el select cambie cargamos los empleados
+            $("#cargos").change(function  () {
+                CargarEmpleados();
+            })
+            // Cuando se pulse el boton de incrementar actualizamos el salario haciendo una peticion
+            $("#btnincrementar").click(function  () {
+                // recogemos el valor el id y hacemos una peticion con el cargo y el aumento
+                let incremento = $("#inputaumento").val()
+                let request = "api/Empleados/IncrementarSalarioOficios/"+$("#cargos").val()+"/"+incremento
+                $.ajax({
+                    url:url+request,
+                    type:"PUT",
+                    success:function  () {
+                        console.log("se a cambiado el salario");
+                        CargarEmpleados();
+                        
+                    }
+                })
+            })
+        })
+        // Funcion para cargar los empleos a partir de una peticion con getJSON
+        function CargarEmpleos () {
+            let request = "api/Empleados/GetOficios/oficios"
+            $.getJSON(url+request,function  (data) {
+                $.each(data,function  (index,oficio) {
+                    $("#cargos").append(`<option value="${oficio}">${oficio}</option>`)
+                })
+            })
+        }
+        // Funcion para cargar los empleados en base a el nombre del empleo
+        function CargarEmpleados () {
+            let nombreEmpleo = $("#cargos").val()
+                let request = "api/Empleados/GetEmpleadosOficio/empleadosoficio/"+nombreEmpleo
+                $.ajax({
+                    url:url+request,
+                    type:"GET",
+                    dataType:"json",
+                    success: function  (data) {
+                        $("#tbody").html("");
+                        $.each(data,function  (index,empleado) {
+                            $("#tbody").append(`<tr>
+                                <td>${empleado.apellido}</td>
+                                <td>${empleado.oficio}</td>
+                                <td>${empleado.salario}</td>
+                                </tr>`)
+                        })
+                    }
+                })
+        }
+    </script>
+</body>
+</html>
