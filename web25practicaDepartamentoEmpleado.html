@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Maestro dealle empleado departamentos</h1>
+    <ul id="departamentos"> <a></a></ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Id Empleado</th>
+                <th>Apellido</th>
+                <th>Departamento</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function  () {
+            $(document).on("click",".cargarempleados",function  () {
+                // recogemos el idDepartamento que esta dentro del boton clicado val()
+                let idDepartamento = $(this).val()
+                let request = "api/Empleados/EmpleadosDepartamento/" + idDepartamento
+                let url = "https://apiempleadosspgs.azurewebsites.net/"
+                // hacemos una peticion para optener los empleados del departamento
+                $.ajax({
+                    url:url+request,
+                    type:"GET",
+                    dataType:"json",
+                    success:function(data){
+                        // Limpiamos el tbody y para cada empleado del departamento añadimos un tr a el tbody
+                        $("#tbody").html("");
+                        $.each(data,function  (index,empleados) {
+                            $("#tbody").append(`
+                            <tr>
+                                <td>${empleados.idEmpleado}</td>
+                                <td>${empleados.apellido}</td>
+                                <td>${empleados.departamento}</td>
+                                <td>${empleados.oficio}</td>
+                                <td>${empleados.salario}</td>
+                            </tr>
+                            `)
+                        })
+                    }
+                })
+            })
+            // Cargamos los departamentos
+            loadDepartamentos();
+        })
+        function loadDepartamentos () {
+            let url = "https://apicruddepartamentospgs.azurewebsites.net/"
+            let request = "webresources/departamentos"
+            $.ajax({
+                url:url + request,
+                type:"GET",
+                dataType:"json",
+                success: function  (data) {
+                    // recorremos departamentos
+                    $.each(data, function  (index, departamentos) {
+                        console.log(departamentos);
+                        // Asignamos a cada departamento un li con su nombre y un boton con una clase para cargar empleados
+                        $("#departamentos").append(`
+                        <li>${departamentos.nombre} <button class="cargarempleados" value="${departamentos.numero}">Empleados</button></li>
+                        `)
+                    })
+                }
+            })
+        }
+    </script>
+</body>
+</html>
