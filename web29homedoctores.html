@@ -98,15 +98,14 @@
     </style>
 </head>
 
-<body class="d-flex min-vh-100 text-center text-bg-dark">
-    <div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
+<body class="d-flex min-vh-100 min-vw-80 text-center text-bg-dark">
+    <div class="d-flex w-90 p-3 mx-auto flex-column">
         <header class="mb-auto">
             <div>
                 <h3 class="float-md-start mb-0">CRUD Doctores</h3>
-                <nav class="nav nav-masthead justify-content-center float-md-end"> <a
-                        class="nav-link fw-bold py-1 px-0 active" aria-current="page"
-                        href="web29homedoctores.html">Home</a> <a class="nav-link fw-bold py-1 px-0"
-                        href="web29createdoctor.html">Create Doctor</a>
+                <nav class="nav nav-masthead justify-content-center float-md-end"> 
+                    <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="web29homedoctores.html">Home</a> 
+                    <a class="nav-link fw-bold py-1 px-0" href="web29createdoctor.html">Create Doctor</a>
                 </nav>
             </div>
         </header>
@@ -121,6 +120,7 @@
                             <th>Apellido</th>
                             <th>Especialidad</th>
                             <th>Salario</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -142,7 +142,32 @@
     //          }
     let url = "https://apicruddoctores.azurewebsites.net/"
     $(document).ready(function () {
+        let params = new window.URLSearchParams(window.location.search)
+        let accion = params.get("accion")
         CargarDoctores();
+        if(accion == "editado"){
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Se a editado el doctor",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(() => {
+                window.location.href = "web29homedoctores.html"
+            }, 1600);
+        }else if(accion == "creado"){
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Se a creado el doctor",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(() => {
+                window.location.href = "web29homedoctores.html"
+            }, 1600);
+        }
     })
     $(document).on("click", ".btn-danger", function () {
         let iddoctor = $(this).val()
@@ -190,6 +215,7 @@
                             <td>${doctor.especialidad}</td>
                             <td>${doctor.salario}</td>
                             <td><button value="${doctor.idDoctor}" data-apellidos="${doctor.apellido}" class="btn btn-danger">Eliminar</button></td>
+                            <td><a class="btn btn-warning" href='web29editdoctor.html?iddoctor=${doctor.idDoctor}'>Editar</a></td>
                         </tr>
                         `)
                 })
