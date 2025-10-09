@@ -1,0 +1,18 @@
+
+---Cuando hacemos una peticion ajax en JSON el:
+
+- contentType es lo que envias y siempre hay que enviarlo en json: 
+let hospitalJSON = JSON.stringify(hospital)
+contentType:"application/json"
+
+- dataType es lo que recibes
+dataType:"json"
+
+-------------------------------------------------------------------------------------------------------
+Para enviar datos en la url un ejemplo es asi : 
+href='web28detailhospital.html?idhospital=${lo que queremos enviar}'
+
+Para recoger datos enviados en la URL se hace asi :
+
+let params = new window.URLSearchParams(window.location.search)
+let x = params.get("LoQueQueremosRecuperar")

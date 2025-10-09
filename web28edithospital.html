@@ -169,10 +169,9 @@
     </nav>
     <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Create</h1>
+            <h1>Edit Hospital</h1>
             <h2 id="mensaje"></h2>
-            <label>Id hospital</label>
-            <input type="text" id="cajaid" class="form-control"><br>
+            <input type="hidden" id="cajaid" class="form-control"><br>
             <label>Nombre</label>
             <input type="text" id="cajanombre" class="form-control"><br>
             <label>Direccion</label>
@@ -181,15 +180,51 @@
             <input type="text" id="cajaTelefono" class="form-control"><br>
             <label>Numero de camas</label>
             <input type="text" id="cajacamas" class="form-control"><br>
-            <button id="btninsertar" class="btn btn-bd-primary">Insertar hospital</button>
+            <button id="btnedit" class="btn btn-warning">Editar hospital</button>
         </div>
     </main>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery-3.7.1.js"></script>
     <script>
         let url = "https://apicrudhospital.azurewebsites.net/"
+        let params = new window.URLSearchParams(window.location.search)
+        let idhospital = params.get("idhospital")
+        let requestFind = "webresources/hospitales/" + idhospital
         $(document).ready(function  () {
-            
+            $.ajax({
+                url: url+requestFind,
+                type:"GET",
+                success: function  (data) {
+                    $("#cajaid").val(data.idhospital)
+                    $("#cajanombre").val(data.nombre)
+                    $("#cajadireccion").val(data.direccion)
+                    $("#cajaTelefono").val(data.telefono)
+                    $("#cajacamas").val(data.camas)
+                }
+            })
+        $("#btnedit").click(function  () {
+            let requestFind = "webresources/hospitales/put/"
+
+            let hospital = new Object();
+            hospital.idhospital = $("#cajaid").val()
+            hospital.nombre = $("#cajanombre").val()
+            hospital.direccion = $("#cajadireccion").val()
+            hospital.telefono = $("#cajaTelefono").val()
+            hospital.camas = parseInt($("#cajacamas").val())
+
+            let hospitalJSON = JSON.stringify(hospital)
+            console.log(hospitalJSON);
+            $.ajax({
+                url:url+requestFind,
+                type:"PUT",
+                contentType:"application/json",
+                data:hospitalJSON,
+                success: function  () {
+                    $("#mensaje").text("Usuario editado");
+                    window.location.href = `web28detailhospital.html?idhospital=${hospital.idhospital}`
+                }
+            })
+        })
         })
     </script>
 </body>
