@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <label>Numero</label>
+        <input type="text" id="cajaNumero">
+        <label>Nombre</label>
+        <input type="text" id="cajaNombre">
+        <label>Localidad</label>
+        <input type="text" id="cajaLocalidad">
+        <button id="crearDepartamento">Crear Departamento</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Numero</td>
+                    <td>Nombre</td>
+                    <td>Localidad</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+        <label>Numero</label>
+        <input type="text" id="editNumero">
+        <label>Nombre</label>
+        <input type="text" id="editNombre">
+        <label>Localidad</label>
+        <input type="text" id="editLocalidad">
+        <button id="editarDepartamento">Editar Departamento</button>
+    </div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url = "https://apicruddepartamentos.azurewebsites.net/"
+        let request = "api/departamentos"
+        $(document).ready(function () {
+            ListarDepartamentos();
+        })
+        $("#crearDepartamento").click(function () {
+            let numero = $("#cajaNumero").val()
+            let nombre = $("#cajaNombre").val()
+            let localidad = $("#cajaLocalidad").val()
+            console.log(numero, " ", nombre, " ", localidad);
+            let departamento = new Object()
+            departamento.Numero = numero
+            departamento.Nombre = nombre
+            departamento.Localidad = localidad
+            departamentoJSON = JSON.stringify(departamento)
+
+            $.ajax({
+                url: url + request,
+                type: "POST",
+                contentType: "application/json",
+                data: departamentoJSON,
+                success: function () {
+                    console.log("Departamento Creado");
+                    ListarDepartamentos()
+                }
+            })
+        })
+        function ListarDepartamentos() {
+            $("#tbody").html("")
+            $.ajax({
+                url: url + request,
+                type: "GET",
+                success: function (data) {
+                    $.each(data, (index, departamentos) => {
+                        console.log(departamentos);
+                        $("#tbody").append(`
+                <tr>
+                    <td>${departamentos.Numero}</td>
+                    <td>${departamentos.Nombre}</td>
+                    <td>${departamentos.Localidad}</td>
+                    <td><button value="${departamentos.Numero}" class="btn btn-danger">Borrar</button></td>
+                </tr>
+                `)
+                    })
+                }
+            })
+        }
+        $("#editarDepartamento").click(function () {
+            let departamento = new Object();
+            departamento.Numero = parseInt($("#editNumero").val())
+            departamento.Nombre = $("#editNombre").val()
+            departamento.Localidad = $("#editLocalidad").val()
+            let departamentoJSON = JSON.stringify(departamento)
+            console.log(departamentoJSON);
+            $.ajax({
+                url:url+request+"/"+departamento.Numero,
+                type:"PUT",
+                contentType:"application/json",
+                data:departamentoJSON,
+                success: function () {
+                    console.log("Departamento editado");
+                    ListarDepartamentos();
+                }
+            })
+        })
+        $(document).on("click", ".btn-danger", function () {
+            $.ajax({
+                url:url+request+"/"+$(this).val(),
+                type:"DELETE",
+                success: function () {
+                  console.log("Departamento Eliminado");
+                  ListarDepartamentos();
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
