@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <label>Seleccione un equipo</label>
+    <select id="equipos"></select>
+    <script src="./js/jquery-3.7.1.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <button class="btn btn-primary" id="btnJugadores" type="button">Buscar Jugadores</button>
+    <div id="divJugador"></div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody id="jugadores"></tbody>
+    </table>
+    <script>
+    // "idJugador": 0,
+    // "nombre": "string",
+    // "posicion": "string",
+    // "imagen": "string",
+    // "fechaNacimiento": "string",
+    // "pais": "string",
+    // "idEquipo": 0
+        let url = "https://apiapuestas.azurewebsites.net/"
+        let request = "api/Equipos"
+        $.ajax({
+            url: url + request,
+            type: "GET",
+            success: function (data) {
+                $.each(data, (index, equipo) => {
+                    $("#equipos").append(`
+                    <option value="${equipo.idEquipo}">${equipo.nombre}</option>
+                    `)
+                })
+            }
+        })
+        $("#btnJugadores").click( function () {
+            let selectEquipo = $("#equipos").val()
+            request = "api/Jugadores/JugadoresEquipos/" + selectEquipo
+            $("#divJugador").html("")
+            let html = "";
+            $.ajax({
+                url: url + request,
+                type:"GET",
+                success: function (data) {
+                    $.each(data , (index,jugador) => {
+                        html += `
+                        <tr>
+                            <td>${jugador.nombre}</td>
+                            <td><img style="width:150px;" src="${jugador.imagen}"/></td>
+                            <td><button onclick="window.scrollTo(0, 0);" value="${jugador.idJugador}" class="detalleJugador btn btn-warning">Detalles</button></td>
+                        </tr>
+                        `
+                    })
+                    $("#jugadores").html(html)
+                }
+            })
+        })
+        $(document).on("click",".detalleJugador",function () {
+            let idjugador = $(this).val();
+            request= "api/Jugadores/" + idjugador;
+            $.ajax({
+                url:url + request,
+                type:"GET",
+                success: function (data) {
+                    $("#divJugador").html(`
+                    <h3>${data.nombre}</h3>
+                    <img style="width:150px;" src="${data.imagen}"/>
+                    <h2>Posicion: ${data.posicion}</h2>
+                    <p>Nacimiento: ${data.fechaNacimiento}</p>
+                    <p>Pais: ${data.pais}</p>
+                    `)
+                }
+            })
+        })
+</script>
+</body>
+</html>
